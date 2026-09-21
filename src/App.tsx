@@ -1,5 +1,5 @@
 import { useEffect, useState, type CSSProperties } from "react";
-import { Sidebar } from "./components/sidebar"; 
+import { Sidebar } from "./components/Sidebar"; 
 import { SearchBar } from "./components/SearchBar";
 import { CurrentWeather } from "./components/CurrentWeather";
 import { AirConditions } from "./components/AirConditions";
@@ -18,11 +18,15 @@ export default function App() {
   const [state, setState] = useState<LoadState>("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [lastQuery, setLastQuery] = useState<{ type: "city"; value: string } | { type: "coords"; lat: number; lon: number } | null>(null);
-  const [mode, setMode] = useState<"light" | "dark">(
+  
+  // Removed unused 'setMode' state setter to resolve TS6133 warning/error
+  const [mode] = useState<"light" | "dark">(
     () => window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light"
   );
+  
   const { locate, isLocating, error: geoError } = useGeolocation();
 
+  // Fetches weather data by city name query
   async function runSearch(city: string) {
     setState("loading");
     setLastQuery({ type: "city", value: city });
@@ -36,6 +40,7 @@ export default function App() {
     }
   }
 
+  // Fetches weather data using device geolocation coordinates
   async function runLocationSearch() {
     try {
       const { lat, lon } = await locate();
@@ -50,6 +55,7 @@ export default function App() {
     }
   }
 
+  // Retries fetching weather data for the last attempted search query
   function retry() {
     if (!lastQuery) return;
     if (lastQuery.type === "city") void runSearch(lastQuery.value);
@@ -65,10 +71,12 @@ export default function App() {
       });
   }
 
+  // Apply dark/light theme dataset attribute to the document root element
   useEffect(() => {
     document.documentElement.dataset.theme = mode;
   }, [mode]);
 
+  // Compute theme styling dynamically based on weather condition
   const theme = bundle
     ? getWeatherTheme(bundle.current.condition, bundle.current.isDaytime)
     : { gradient: "radial-gradient(circle at top right, #242c3d 0%, #10141d 100%)", accent: "#2e86eb" };
@@ -109,6 +117,7 @@ export default function App() {
   );
 }
 
+// Formats error messages safely based on error type
 function describeError(err: unknown): string {
   if (err instanceof WeatherApiError) return err.message;
   if (err instanceof Error) return err.message;
