@@ -20,6 +20,13 @@ export interface CurrentWeather {
   country: string;
   tempC: number;
   feelsLikeC: number;
+  
+  // Added properties to fix AirConditions.tsx TypeScript errors
+  realFeelC: number;
+  windKph: number;
+  rainChance: number;
+  uvIndex: number;
+
   condition: WeatherMain;
   description: string;
   humidity: number;
@@ -27,27 +34,4 @@ export interface CurrentWeather {
   pressureHpa: number;
   isDaytime: boolean;
   timezoneOffsetSec: number;
-}
-
-export interface ForecastDay {
-  dateIso: string;
-  label: string;
-  highC: number;
-  lowC: number;
-  condition: WeatherMain;
-  description: string;
-}
-
-export interface WeatherBundle {
-  current: CurrentWeather;
-  forecast: ForecastDay[];
-}
-
-export class WeatherApiError extends Error {
-  kind: "not-found" | "network" | "config" | "unknown";
-  constructor(message: string, kind: WeatherApiError["kind"]) {
-    super(message);
-    this.kind = kind;
-    this.name = "WeatherApiError";
-  }
 }
