@@ -19,7 +19,6 @@ export default function App() {
   const [errorMessage, setErrorMessage] = useState("");
   const [lastQuery, setLastQuery] = useState<{ type: "city"; value: string } | { type: "coords"; lat: number; lon: number } | null>(null);
   
-  // Removed unused 'setMode' state setter to resolve TS6133 warning/error
   const [mode] = useState<"light" | "dark">(
     () => window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light"
   );
@@ -34,7 +33,7 @@ export default function App() {
       const result = await weatherApi.getWeatherByQuery(city);
       setBundle(result);
       setState("loaded");
-    } catch (err) {
+    } catch (err: unknown) {
       setErrorMessage(describeError(err));
       setState("error");
     }
@@ -49,8 +48,8 @@ export default function App() {
       const result = await weatherApi.getWeatherByCoords(lat, lon);
       setBundle(result);
       setState("loaded");
-    } catch (err) {
-      setErrorMessage(err instanceof Error ? err.message : describeError(err));
+    } catch (err: unknown) {
+      setErrorMessage(describeError(err));
       setState("error");
     }
   }
@@ -65,7 +64,7 @@ export default function App() {
         setBundle(result);
         setState("loaded");
       })
-      .catch((err) => {
+      .catch((err: unknown) => {
         setErrorMessage(describeError(err));
         setState("error");
       });
@@ -117,9 +116,10 @@ export default function App() {
   );
 }
 
-// Formats error messages safely based on error type
+// Formats error messages safely based on unknown error types
 function describeError(err: unknown): string {
   if (err instanceof WeatherApiError) return err.message;
   if (err instanceof Error) return err.message;
+  if (typeof err === "string") return err;
   return "Something unexpected happened. Please try again.";
 }
