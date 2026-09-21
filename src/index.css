@@ -70,7 +70,8 @@ body {
 
 .dashboard-container {
   display: grid;
-  grid-template-columns: 80px 1fr 300px; /* Sidebar, Main, Forecast */
+  grid-template-columns: 80px 1fr 300px;
+  /* Sidebar, Main, Forecast */
   width: 100%;
   height: 100%;
 }
@@ -328,7 +329,8 @@ body {
 }
 
 .large-icon {
-  color: #ffca28; /* Golden sun color */
+  color: #ffca28;
+  /* Golden sun color */
   filter: drop-shadow(0 0 10px rgba(255, 202, 40, 0.3));
 }
 
@@ -387,7 +389,8 @@ body {
 .metric-value {
   font-size: 1.5rem;
   font-weight: 700;
-  margin-left: 26px; /* Align with label */
+  margin-left: 26px;
+  /* Align with label */
 }
 
 /* ---------------- 7-day forecast (right pane) ---------------- */
@@ -502,7 +505,8 @@ body {
 /* Tablet & laptop */
 @media (max-width: 1024px) {
   .dashboard-container {
-    grid-template-columns: 80px 1fr; /* Forecast pane drops below main */
+    grid-template-columns: 80px 1fr;
+    /* Forecast pane drops below main */
     height: auto;
     min-height: 100vh;
     max-height: none;
@@ -511,7 +515,8 @@ body {
   }
 
   .forecast-pane {
-    grid-column: 1 / -1; /* span full width beneath */
+    grid-column: 1 / -1;
+    /* span full width beneath */
     border-left: none;
     border-top: 1px solid var(--glass-border);
   }
@@ -532,12 +537,14 @@ body {
 
   .dashboard-container {
     display: flex;
-    flex-direction: column; /* stack everything vertically */
+    flex-direction: column;
+    /* stack everything vertically */
     width: 100%;
     height: auto;
     min-height: 100vh;
     border-radius: 0;
-    padding-bottom: 70px; /* room for the bottom nav */
+    padding-bottom: 70px;
+    /* room for the bottom nav */
   }
 
   /* Sidebar becomes a bottom navigation bar */
@@ -612,5 +619,33 @@ body {
   .large-icon {
     width: 100px;
     height: 100px;
+  }
+}
+
+/* Mobile View Search Bar Tweaks */
+@media (max-width: 768px) {
+  .search-bar {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+
+
+  .search-field {
+    height: 40px;
+    padding: 0 12px;
+  }
+
+  .search-field input {
+    font-size: 0.85rem;
+  }
+
+  .search-bar .btn-primary,
+  .search-bar .btn-ghost {
+    width: auto;
+    height: 40px;
+    padding: 0 14px;
+    font-size: 0.8rem;
   }
 }
