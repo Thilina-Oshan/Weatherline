@@ -6,8 +6,7 @@ interface Props {
 
 /**
  * A small set of consistent line-style icons so the dashboard doesn't depend
- * on an external icon font or image CDN (which the app shouldn't need network
- * access for beyond the weather API itself).
+ * on an external icon font or image CDN.
  */
 export function WeatherIcon({ icon, size = 48, className }: Props) {
   const common = {
@@ -29,7 +28,18 @@ export function WeatherIcon({ icon, size = 48, className }: Props) {
             const y1 = 32 + Math.sin(angle) * 20;
             const x2 = 32 + Math.cos(angle) * 26;
             const y2 = 32 + Math.sin(angle) * 26;
-            return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />;
+            return (
+              <line
+                key={i}
+                x1={x1}
+                y1={y1}
+                x2={x2}
+                y2={y2}
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+              />
+            );
           })}
         </svg>
       );

@@ -1,8 +1,10 @@
 import { useEffect, useState, type CSSProperties } from "react";
+import { Sidebar } from "./components/sidebar"; 
 import { SearchBar } from "./components/SearchBar";
 import { CurrentWeather } from "./components/CurrentWeather";
+import { AirConditions } from "./components/AirConditions";
+import { HourlyForecast } from "./components/HourlyForecast";
 import { Forecast } from "./components/Forecast";
-import { ThemeToggle } from "./components/ThemeToggle";
 import { LoadingSpinner, ErrorBanner, EmptyState } from "./components/StatusViews";
 import { weatherApi } from "./api/weather";
 import { useGeolocation } from "./hooks/useGeolocation";
@@ -16,8 +18,8 @@ export default function App() {
   const [state, setState] = useState<LoadState>("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [lastQuery, setLastQuery] = useState<{ type: "city"; value: string } | { type: "coords"; lat: number; lon: number } | null>(null);
-  const [mode, setMode] = useState<"light" | "dark">(() =>
-    window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light"
+  const [mode, setMode] = useState<"light" | "dark">(
+    () => window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light"
   );
   const { locate, isLocating, error: geoError } = useGeolocation();
 
@@ -69,36 +71,40 @@ export default function App() {
 
   const theme = bundle
     ? getWeatherTheme(bundle.current.condition, bundle.current.isDaytime)
-    : { gradient: "linear-gradient(160deg, #2E86D8 0%, #5FB0E8 45%, #F5A623 130%)", accent: "#5FB0E8" };
+    : { gradient: "radial-gradient(circle at top right, #242c3d 0%, #10141d 100%)", accent: "#2e86eb" };
 
   return (
     <div
-      className="app"
+      className="dashboard-container"
       style={{ "--bg-gradient": theme.gradient, "--accent": theme.accent } as CSSProperties}
     >
-      <div className="app__backdrop" />
-      <div className="app__content">
-        <header className="app__header">
-          <p className="wordmark">Sky Pulse</p>
-          <ThemeToggle mode={mode} onToggle={() => setMode((m) => (m === "dark" ? "light" : "dark"))} />
-        </header>
+      <Sidebar />
 
+      <main className="main-pane">
         <SearchBar onSearch={runSearch} onUseLocation={runLocationSearch} isLocating={isLocating} />
 
         {geoError && state !== "error" && <p className="geo-hint">{geoError}</p>}
 
-        <main className="app__main">
-          {state === "idle" && <EmptyState />}
-          {state === "loading" && <LoadingSpinner />}
-          {state === "error" && <ErrorBanner message={errorMessage} onRetry={lastQuery ? retry : undefined} />}
-          {state === "loaded" && bundle && (
-            <>
-              <CurrentWeather data={bundle.current} />
-              <Forecast days={bundle.forecast} />
-            </>
-          )}
-        </main>
-      </div>
+        {state === "idle" && <EmptyState />}
+        {state === "loading" && <LoadingSpinner />}
+        {state === "error" && <ErrorBanner message={errorMessage} onRetry={lastQuery ? retry : undefined} />}
+
+        {state === "loaded" && bundle && (
+          <>
+            <CurrentWeather data={bundle.current} />
+            <HourlyForecast />
+            <AirConditions data={bundle.current} />
+          </>
+        )}
+      </main>
+
+      <aside className="right-pane">
+        {state === "loaded" && bundle ? (
+          <Forecast days={bundle.forecast} />
+        ) : (
+          <div className="forecast-placeholder">Search a location to see weekly forecast</div>
+        )}
+      </aside>
     </div>
   );
 }
