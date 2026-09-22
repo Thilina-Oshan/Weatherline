@@ -1,5 +1,5 @@
 import { useEffect, useState, type CSSProperties } from "react";
-import { Sidebar } from "./components/Sidebar"; 
+import { Sidebar } from "./components/Sidebar";
 import { SearchBar } from "./components/SearchBar";
 import { CurrentWeather } from "./components/CurrentWeather";
 import { AirConditions } from "./components/AirConditions";
@@ -18,11 +18,11 @@ export default function App() {
   const [state, setState] = useState<LoadState>("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [lastQuery, setLastQuery] = useState<{ type: "city"; value: string } | { type: "coords"; lat: number; lon: number } | null>(null);
-  
+
   const [mode] = useState<"light" | "dark">(
     () => window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light"
   );
-  
+
   const { locate, isLocating, error: geoError } = useGeolocation();
 
   // Fetches weather data by city name query
@@ -112,6 +112,7 @@ export default function App() {
           <div className="forecast-placeholder">Search a location to see weekly forecast</div>
         )}
       </aside>
+
     </div>
   );
 }
